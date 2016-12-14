@@ -1,4 +1,6 @@
 import os
+from decouple import config, Csv
+import dj_database_url
 
 gettext = lambda s: s
 DATA_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -24,12 +26,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '&w(y1y647q%$*uzl*$!hag+^@zm&iee7w5k)dz46k_#s5g(*ua'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -76,6 +79,8 @@ STATIC_ROOT = os.path.join(DATA_DIR, 'static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'djangocms_test', 'static'),
 )
+
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 SITE_ID = 1
 
 
@@ -86,21 +91,21 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.contrib.auth.context_processors.auth',
-    'django.contrib.messages.context_processors.messages',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.debug',
-    'django.core.context_processors.request',
-    'django.core.context_processors.media',
-    'django.core.context_processors.csrf',
-    'django.core.context_processors.tz',
-    'sekizai.context_processors.sekizai',
-    'django.core.context_processors.static',
-    'cms.context_processors.cms_settings'
+                'django.contrib.messages.context_processors.messages',
+                'django.core.context_processors.i18n',
+                'django.core.context_processors.debug',
+                'django.core.context_processors.request',
+                'django.core.context_processors.media',
+                'django.core.context_processors.csrf',
+                'django.core.context_processors.tz',
+                'sekizai.context_processors.sekizai',
+                'django.core.context_processors.static',
+                'cms.context_processors.cms_settings'
             ],
             'loaders': [
                 'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-    'django.template.loaders.eggs.Loader'
+                'django.template.loaders.app_directories.Loader',
+                'django.template.loaders.eggs.Loader'
             ],
         },
     },
@@ -186,15 +191,9 @@ CMS_PERMISSION = True
 CMS_PLACEHOLDER_CONF = {}
 
 DATABASES = {
-    'default': {
-        'CONN_MAX_AGE': 0,
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'HOST': 'localhost',
-        'NAME': 'djangocms_test',
-        'PASSWORD': '',
-        'PORT': '',
-        'USER': 'andy'
-    }
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL')
+    )
 }
 
 MIGRATION_MODULES = {
