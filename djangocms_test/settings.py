@@ -1,4 +1,5 @@
 import os
+
 gettext = lambda s: s
 DATA_DIR = os.path.dirname(os.path.dirname(__file__))
 """
@@ -187,17 +188,17 @@ CMS_PLACEHOLDER_CONF = {}
 DATABASES = {
     'default': {
         'CONN_MAX_AGE': 0,
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'HOST': 'localhost',
-        'NAME': 'project.db',
+        'NAME': 'djangocms_test',
         'PASSWORD': '',
         'PORT': '',
-        'USER': ''
+        'USER': 'andy'
     }
 }
 
 MIGRATION_MODULES = {
-    
+
 }
 
 THUMBNAIL_PROCESSORS = (
